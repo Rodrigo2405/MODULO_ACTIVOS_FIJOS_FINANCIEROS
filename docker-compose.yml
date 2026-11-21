@@ -1,0 +1,24 @@
+# BD local para desarrollo. Los scripts se cargan solos la PRIMERA vez
+# (cuando el volumen esta vacio). El backend y el frontend se agregan despues.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: af_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?define POSTGRES_PASSWORD en .env}
+      POSTGRES_DB: ${POSTGRES_DB:-ple_sunat}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/ple_sunat.sql:/docker-entrypoint-initdb.d/01_ple_sunat.sql:ro
+      - ./db/ple_activos_fijos.sql:/docker-entrypoint-initdb.d/02_ple_activos_fijos.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-ple_sunat}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  pgdata:
