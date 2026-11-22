@@ -16,11 +16,27 @@ export interface ActivoFijo {
   fecha_adquisicion: string; // AAAA-MM-DD
   costo_adquisicion: string; // "6000.00"
   valor_residual: string; // "0.00"
-  metodo_depreciacion: string; // "1"
+  metodo_depreciacion: string; // "1" (línea recta)
   tipo_activo_fijo: string; // "1"
-  estado_activo_fijo: string; // "9"
+  estado_activo_fijo: string; // "9" (operativo)
   situacion: string; // "P" (pendiente), "A" (aprobado)
   estado_conservacion?: string;
+  marca?: string;
+  modelo?: string;
+  numero_serie?: string;
+}
+
+export interface CreateActivoDto {
+  empresa_id?: number;
+  descripcion: string;
+  clase_activo_id: number;
+  fecha_adquisicion: string; // AAAA-MM-DD
+  costo_adquisicion: string; // "6000.00"
+  valor_residual?: string;
+  metodo_depreciacion?: string;
+  tipo_activo_fijo?: string;
+  estado_activo_fijo?: string;
+  situacion?: string;
   marca?: string;
   modelo?: string;
   numero_serie?: string;
@@ -31,6 +47,12 @@ export interface PaginatedResponse<T> {
   page: number;
   limit: number;
   total: number;
+}
+
+export interface ApiResult<T> {
+  data: T;
+  isMock: boolean;
+  message?: string;
 }
 
 export interface ApiError {

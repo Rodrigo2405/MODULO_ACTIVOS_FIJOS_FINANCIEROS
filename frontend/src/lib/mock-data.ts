@@ -1,4 +1,4 @@
-import { ActivoFijo, ClaseActivo, PaginatedResponse } from "./types";
+import { ActivoFijo, ClaseActivo, PaginatedResponse, CreateActivoDto } from "./types";
 
 export const MOCK_CLASES_ACTIVO: ClaseActivo[] = [
   { id: 1, codigo: "1", descripcion: "Edificios y construcciones", porcentaje_depreciacion_anual: "5.00", vida_util_anios: 20 },
@@ -10,7 +10,7 @@ export const MOCK_CLASES_ACTIVO: ClaseActivo[] = [
   { id: 7, codigo: "7", descripcion: "Equipos de procesamiento de datos", porcentaje_depreciacion_anual: "25.00", vida_util_anios: 4 },
 ];
 
-export const MOCK_ACTIVOS: ActivoFijo[] = [
+let inMemoryActivos: ActivoFijo[] = [
   {
     id: 1,
     empresa_id: 1,
@@ -108,7 +108,7 @@ export const MOCK_ACTIVOS: ActivoFijo[] = [
 ];
 
 export function getMockActivosPaginados(page = 1, limit = 50, search = "", claseId?: number): PaginatedResponse<ActivoFijo> {
-  let filtered = [...MOCK_ACTIVOS];
+  let filtered = [...inMemoryActivos];
 
   if (search.trim()) {
     const s = search.toLowerCase();
@@ -131,4 +131,41 @@ export function getMockActivosPaginados(page = 1, limit = 50, search = "", clase
     limit,
     total,
   };
+}
+
+export const MOCK_ACTIVOS = inMemoryActivos;
+
+export function getMockActivoById(id: number): ActivoFijo | undefined {
+
+  return inMemoryActivos.find((a) => a.id === id);
+}
+
+export function addMockActivo(dto: CreateActivoDto): ActivoFijo {
+  const newId = inMemoryActivos.length > 0 ? Math.max(...inMemoryActivos.map((a) => a.id)) + 1 : 1;
+  const clase = MOCK_CLASES_ACTIVO.find((c) => c.id === dto.clase_activo_id);
+  const correlativo = String(newId).padStart(4, "0");
+  const codigoPatrimonial = `AF-2026-${correlativo}`;
+
+  const nuevoActivo: ActivoFijo = {
+    id: newId,
+    empresa_id: dto.empresa_id || 1,
+    codigo_patrimonial: codigoPatrimonial,
+    descripcion: dto.descripcion,
+    clase_activo_id: dto.clase_activo_id,
+    clase_nombre: clase?.descripcion || `Clase ${dto.clase_activo_id}`,
+    fecha_adquisicion: dto.fecha_adquisicion,
+    costo_adquisicion: parseFloat(dto.costo_adquisicion).toFixed(2),
+    valor_residual: dto.valor_residual ? parseFloat(dto.valor_residual).toFixed(2) : "0.00",
+    metodo_depreciacion: dto.metodo_depreciacion || "1",
+    tipo_activo_fijo: dto.tipo_activo_fijo || "1",
+    estado_activo_fijo: dto.estado_activo_fijo || "9",
+    situacion: dto.situacion || "P",
+    estado_conservacion: "Bueno",
+    marca: dto.marca,
+    modelo: dto.modelo,
+    numero_serie: dto.numero_serie,
+  };
+
+  inMemoryActivos = [nuevoActivo, ...inMemoryActivos];
+  return nuevoActivo;
 }
