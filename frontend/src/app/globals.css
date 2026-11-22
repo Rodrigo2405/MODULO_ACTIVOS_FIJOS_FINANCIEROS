@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* ISO 9241 Ergonomic Light Palette - Low Glare Matte Surfaces */
+  --background: #f3f4f6;
+  --surface: #fafbfd;
+  --surface-subtle: #eff1f5;
+  --border: #e2e5eb;
+  --foreground: #1e2430;
+  --muted: #5a6475;
+  --accent: #2c4c6e;
+}
+
+.dark {
+  /* ISO 9241 Ergonomic Dark Palette - Reduced Halation Midnight Slate */
+  --background: #11141b;
+  --surface: #171b24;
+  --surface-subtle: #1d222d;
+  --border: #252b37;
+  --foreground: #e2e6ee;
+  --muted: #929dae;
+  --accent: #4b7aa8;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ergonomic Tabular Numerals for Accounting & Financial Precision */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.55);
+}
+
+/* Accessible Keyboard Focus Indicator (ISO 9241-171 / WCAG 2.1) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
